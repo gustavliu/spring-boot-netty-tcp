@@ -2,6 +2,7 @@ package com.example.netty;
 
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ import javax.annotation.PreDestroy;
     private Channel serverChannel;
 
     public void start() throws Exception {
+        serverBootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
         serverChannel =  serverBootstrap.bind(tcpPort).sync().channel().closeFuture().sync().channel();
     }
 

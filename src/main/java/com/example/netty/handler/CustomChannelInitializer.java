@@ -24,7 +24,7 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
 
     @Autowired
     @Qualifier("serverHandler")
-    private ChannelInboundHandlerAdapter somethingServerHandler;
+    private ChannelInboundHandlerAdapter serverHandler;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -36,6 +36,6 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
         pipeline.addLast(DECODER);
         pipeline.addLast(ENCODER);
 
-        pipeline.addLast(somethingServerHandler);
+        pipeline.addLast(serverHandler);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class SpringBootTcpApplication {
 
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext context =SpringApplication.run(SpringBootTcpApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(SpringBootTcpApplication.class, args);
 		TCPServer tcpServer = context.getBean(TCPServer.class);
 		tcpServer.start();
 	}

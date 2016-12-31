@@ -70,7 +70,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx){
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
         Assert.notNull(ctx);
-
+        System.out.println("inactive");
         String channelKey = ctx.channel().remoteAddress().toString();
         this.channelRepository.remove(channelKey);
 
