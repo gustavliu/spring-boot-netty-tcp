@@ -7,13 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import io.netty.bootstrap.ServerBootstrap;
+import org.springframework.stereotype.Service;
+
 import java.net.InetSocketAddress;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 /**
  * Created by Krisztian on 2016. 10. 31..
  */
-@Component
+@Service
     public class TCPServer {
 
     @Autowired
@@ -26,8 +29,8 @@ import javax.annotation.PreDestroy;
 
     private Channel serverChannel;
 
+    @PostConstruct
     public void start() throws Exception {
-        serverBootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
         serverChannel =  serverBootstrap.bind(tcpPort).sync().channel().closeFuture().sync().channel();
     }
 
@@ -52,6 +55,4 @@ import javax.annotation.PreDestroy;
     public void setTcpPort(InetSocketAddress tcpPort) {
         this.tcpPort = tcpPort;
     }
-
-
 }

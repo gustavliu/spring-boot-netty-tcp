@@ -38,8 +38,20 @@ public class TCPConfiguration {
     @Value("${so.keepalive}")
     private boolean keepAlive;
 
+    @Value("${so.reuseaddr}")
+    private boolean reuseAddress;
+
     @Value("${so.backlog}")
     private int backlog;
+
+    @Value("${so.timeout}")
+    private int timeout;
+
+    @Value("${so.rcvbuf}")
+    private int receiveBuff;
+
+    @Value("${so.sndbuf}")
+    private int sendBuff;
 
     @Autowired
     @Qualifier("customChannelInitializer")
@@ -48,6 +60,10 @@ public class TCPConfiguration {
     @Bean(name = "tcpChannelOptions")
     public Map<ChannelOption<?>, Object> tcpChannelOptions() {
         Map<ChannelOption<?>, Object> options = new HashMap<ChannelOption<?>, Object>();
+        options.put(ChannelOption.SO_TIMEOUT,timeout);
+        options.put(ChannelOption.SO_REUSEADDR, reuseAddress);
+        options.put(ChannelOption.SO_RCVBUF, receiveBuff);
+        options.put(ChannelOption.SO_SNDBUF, sendBuff);
         options.put(ChannelOption.SO_KEEPALIVE, keepAlive);
         options.put(ChannelOption.SO_BACKLOG, backlog);
         return options;

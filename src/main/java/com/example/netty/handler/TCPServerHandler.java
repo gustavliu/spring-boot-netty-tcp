@@ -8,24 +8,28 @@ import com.example.netty.ChannelRepository;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.util.Set;
+
 /**
  * Created by Krisztian on 2016. 10. 31..
  */
 @Component
-@Qualifier("serverHandler")
+@Qualifier("tcpServerHandler")
 @ChannelHandler.Sharable
-public class ServerHandler extends ChannelInboundHandlerAdapter {
+public class TCPServerHandler extends ChannelInboundHandlerAdapter {
 
     @Autowired
     private ChannelRepository channelRepository;
 
-    private static Logger logger = Logger.getLogger(ServerHandler.class.getName());
+    private static Logger logger = Logger.getLogger(TCPServerHandler.class.getName());
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -40,6 +44,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
         logger.debug("Binded Channel Count is " + this.channelRepository.size());
         System.out.println("binded: "+this.channelRepository.size());
+
+        Set<String> connectedChannels = getChannelRepository().getChannelCache().keySet();
+        for(String entry : connectedChannels){
+            System.out.println("Channel: "+entry);
+        }
     }
 
     @Override
@@ -61,8 +70,25 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+//        super.userEventTriggered(ctx, evt);
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent e = (IdleStateEvent) evt;
+            if (e.state() == IdleState.READER_IDLE) {
+                logger.debug("Reader Idle");
+                ctx.writeAndFlush("Close connection because idle state.");
+                ctx.close();
+            } else if (e.state() == IdleState.WRITER_IDLE) {
+                ctx.writeAndFlush("PING");
+            }
+        }
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.error(cause.getMessage(), cause);
+        String channelKey = ctx.channel().remoteAddress().toString();
+        this.channelRepository.remove(channelKey);
         ctx.close();
     }
 
@@ -79,5 +105,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     public void setChannelRepository(ChannelRepository channelRepository) {
         this.channelRepository = channelRepository;
+    }
+
+    public ChannelRepository getChannelRepository() {
+        return channelRepository;
     }
 }

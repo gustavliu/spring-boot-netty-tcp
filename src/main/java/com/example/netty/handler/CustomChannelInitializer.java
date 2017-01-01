@@ -8,6 +8,8 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,12 +25,11 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
     private static final StringEncoder ENCODER = new StringEncoder();
 
     @Autowired
-    @Qualifier("serverHandler")
+    @Qualifier("tcpServerHandler")
     private ChannelInboundHandlerAdapter serverHandler;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-
 
         ChannelPipeline pipeline = socketChannel.pipeline();
 
@@ -36,6 +37,7 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
         pipeline.addLast(DECODER);
         pipeline.addLast(ENCODER);
 
-        pipeline.addLast(serverHandler);
+        pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 5, 0));
+        pipeline.addLast("tcpServerHandler",serverHandler);
     }
 }

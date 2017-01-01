@@ -23,4 +23,8 @@ public class ChannelRepository {
     public int size() {
         return this.channelCache.size();
     }
+
+    public HashMap<String, Channel> getChannelCache() {
+        return channelCache;
+    }
 }
