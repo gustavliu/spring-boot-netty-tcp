@@ -1,4 +1,4 @@
-package com.example.netty.handler;
+package com.example.netty.handlers;
 
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
@@ -9,7 +9,6 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -27,6 +26,7 @@ public class CustomChannelInitializer extends ChannelInitializer<SocketChannel> 
     @Autowired
     @Qualifier("tcpServerHandler")
     private ChannelInboundHandlerAdapter serverHandler;
+
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {

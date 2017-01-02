@@ -1,7 +1,7 @@
-package com.example.netty.config;
+package com.example.netty.configurations;
 
-import com.example.netty.ChannelRepository;
-import com.example.netty.handler.CustomChannelInitializer;
+import com.example.netty.repositories.ChannelRepository;
+import com.example.netty.handlers.CustomChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -25,7 +25,7 @@ import java.util.Set;
  */
 @Configuration
 @PropertySource(value= "classpath:/nettyserver.properties")
-public class TCPConfiguration {
+public class NettyConfiguration {
     @Value("${tcp.port}")
     private int tcpPort;
 
@@ -84,10 +84,10 @@ public class TCPConfiguration {
         return new InetSocketAddress(tcpPort);
     }
 
-    @Bean(name = "channelRepository")
-    public ChannelRepository channelRepository() {
-        return new ChannelRepository();
-    }
+//    @Bean(name = "channelRepository")
+//    public ChannelRepository channelRepository() {
+//        return new ChannelRepository();
+//    }
 
     @SuppressWarnings("unchecked")
     @Bean(name = "serverBootstrap")

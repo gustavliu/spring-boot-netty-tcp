@@ -8,16 +8,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import io.netty.bootstrap.ServerBootstrap;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.ServletContextAware;
 
 import java.net.InetSocketAddress;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.servlet.ServletContext;
 
 /**
  * Created by Krisztian on 2016. 10. 31..
  */
 @Service
-    public class TCPServer {
+    public class TCPServer implements ServletContextAware {
+
+    private ServletContext servletContext;
 
     @Autowired
     @Qualifier("serverBootstrap")
@@ -29,7 +33,6 @@ import javax.annotation.PreDestroy;
 
     private Channel serverChannel;
 
-    @PostConstruct
     public void start() throws Exception {
         serverChannel =  serverBootstrap.bind(tcpPort).sync().channel().closeFuture().sync().channel();
     }
@@ -54,5 +57,10 @@ import javax.annotation.PreDestroy;
 
     public void setTcpPort(InetSocketAddress tcpPort) {
         this.tcpPort = tcpPort;
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 }

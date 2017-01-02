@@ -1,13 +1,15 @@
-package com.example.netty;
+package com.example.netty.repositories;
 
 import io.netty.channel.Channel;
-import java.util.HashMap;
+import io.netty.util.internal.chmv8.ConcurrentHashMapV8;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by Krisztian on 2016. 10. 31..
  */
+@Repository
 public class ChannelRepository {
-    private HashMap<String, Channel> channelCache = new HashMap<String, Channel>();
+    private static volatile ConcurrentHashMapV8<String, Channel> channelCache = new ConcurrentHashMapV8<>();
 
     public ChannelRepository put(String key, Channel value) {
         channelCache.put(key, value);
@@ -24,7 +26,7 @@ public class ChannelRepository {
         return this.channelCache.size();
     }
 
-    public HashMap<String, Channel> getChannelCache() {
+    public ConcurrentHashMapV8<String, Channel> getChannelCache() {
         return channelCache;
     }
 }

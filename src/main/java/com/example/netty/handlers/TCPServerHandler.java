@@ -1,10 +1,10 @@
-package com.example.netty.handler;
+package com.example.netty.handlers;
 
 /**
  * Created by Krisztian on 2016. 10. 31..
  */
 
-import com.example.netty.ChannelRepository;
+import com.example.netty.repositories.ChannelRepository;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -71,7 +71,6 @@ public class TCPServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-//        super.userEventTriggered(ctx, evt);
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
             if (e.state() == IdleState.READER_IDLE) {
